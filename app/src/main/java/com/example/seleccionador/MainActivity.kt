@@ -47,9 +47,7 @@ class MainActivity : ComponentActivity() {
             SeleccionadorTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Seleccionador",
                         modifier = Modifier.padding(innerPadding)
-
                     )
                 }
             }
@@ -58,7 +56,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting( modifier: Modifier = Modifier) {
     val listaAlumnos1 = remember { mutableStateListOf<String>() }
     val listaAlumnos2 = remember { mutableStateListOf<String>() }
 
@@ -72,8 +70,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             "Daniel Beltran"
         )
     )
-
-
 
     Column(
         modifier = Modifier
@@ -136,17 +132,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     }
 }
 
-
-@Preview( showBackground = true,
-    showSystemUi = true,
-    device = "spec:width=411dp,height=891dp,dpi=420")
-@Composable
-fun GreetingPreview() {
-
-    SeleccionadorTheme {
-        Greeting("Seleccionador")
-    }
-}
 @Composable
 fun VistaLista(lista: MutableList<String>) {
     Box(
@@ -178,9 +163,21 @@ fun ComponetesLista(alumno: String, modifier: Modifier = Modifier) {
             .background(colorResource(R.color.secundario)),
         contentAlignment = Alignment.CenterStart
     ) {
-            Text(
-                text = "$alumno",
-                modifier = Modifier.padding(start = 100.dp)
-            )
+        Text(
+            text = "$alumno",
+            modifier = Modifier.padding(start = 100.dp)
+        )
+    }
+}
+
+
+@Preview( showBackground = true,
+    showSystemUi = true,
+    device = "spec:width=411dp,height=891dp,dpi=420")
+@Composable
+fun GreetingPreview() {
+
+    SeleccionadorTheme {
+        Greeting()
     }
 }
