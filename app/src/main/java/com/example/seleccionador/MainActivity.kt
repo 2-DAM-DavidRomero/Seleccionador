@@ -25,6 +25,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -55,15 +57,20 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
 
-    val listaAlumnos = mutableListOf<String>()
-    listaAlumnos.add("David Romero")
-    listaAlumnos.add("Carlos Bermudez")
-    listaAlumnos.add("Carlos Barrera")
-    listaAlumnos.add("David Salvador")
-    listaAlumnos.add("David Berlinches")
-    listaAlumnos.add("Daniel Beltran")
-    listaAlumnos.add("Daniel Beltran")
-    listaAlumnos.add("Daniel Beltran")
+    val listaAlumnos1 = remember { mutableStateListOf<String>() }
+    val listaAlumnos2 = remember { mutableStateListOf<String>() }
+
+    listaAlumnos1.addAll(
+        listOf(
+            "David Romero",
+            "Carlos Bermudez",
+            "Carlos Barrera",
+            "David Salvador",
+            "David Berlinches",
+            "Daniel Beltran"
+        )
+    )
+
 
 
     Column(
@@ -79,23 +86,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp) // 🔹 alto fijo para que se vea el borde
-                    .border(2.dp, colorResource(R.color.black), RectangleShape) // 🔹 borde visible
-                    .background(colorResource(R.color.primario))
-                    .padding(8.dp)
-            ) {
-                Column(
-                    modifier = Modifier.verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    listaAlumnos.forEach { alumno ->
-                        ComponetesLista(alumno)
-                    }
-                }
-            }
+            VistaLista(listaAlumnos1)
         }
         Row(
             modifier = Modifier
@@ -106,10 +97,17 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         ) {
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(R.color.primario) // 🔹 color de fondo
+                    containerColor = colorResource(R.color.primario)
                 ),
                 onClick = {
-
+                    if (listaAlumnos1.size!=0) {
+                        val selecionado = (0..listaAlumnos1.size - 1).random()
+                        listaAlumnos2.add(listaAlumnos1[selecionado])
+                        listaAlumnos1.removeAt(selecionado)
+                    }else{
+                        listaAlumnos1.addAll(listaAlumnos2)
+                        listaAlumnos2.clear()
+                    }
             }){
                 Text("Seleccionar")
             }
@@ -122,22 +120,38 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ){
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp) // 🔹 alto fijo para que se vea el borde
-                    .border(2.dp, colorResource(R.color.black), RectangleShape) // 🔹 borde visible
-                    .background(colorResource(R.color.primario))
-                    .padding(8.dp)
-            ) {
-                Column(
-                    modifier = Modifier.verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    listaAlumnos.forEach { alumno ->
-                        ComponetesLista(alumno)
-                    }
-                }
+            VistaLista(listaAlumnos2)
+        }
+    }
+}
+
+
+@Preview( showBackground = true,
+    showSystemUi = true,
+    device = "spec:width=411dp,height=891dp,dpi=420")
+@Composable
+fun GreetingPreview() {
+
+    SeleccionadorTheme {
+        Greeting("Seleccionador")
+    }
+}
+@Composable
+fun VistaLista(lista: MutableList<String>) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .border(2.dp, colorResource(R.color.black), RectangleShape)
+            .background(colorResource(R.color.primario))
+            .padding(8.dp)
+    ) {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            lista.forEach { alumno ->
+                ComponetesLista(alumno)
             }
         }
     }
@@ -148,25 +162,14 @@ fun ComponetesLista(alumno: String, modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp) // todas las cajas mismas dimensiones
-            .padding(horizontal = 16.dp, vertical = 4.dp) // margen entre cajas
+            .height(48.dp)
+            .padding(horizontal = 16.dp, vertical = 4.dp)
             .background(colorResource(R.color.secundario)),
-        contentAlignment = Alignment.CenterStart // texto alineado a la izquierda y centrado vertical
+        contentAlignment = Alignment.CenterStart
     ) {
         Text(
             text = alumno,
-            modifier = Modifier.padding(start = 100.dp) // margen interno del texto
+            modifier = Modifier.padding(start = 100.dp)
         )
-    }
-}
-
-@Preview( showBackground = true,
-    showSystemUi = true,
-    device = "spec:width=411dp,height=891dp,dpi=420")
-@Composable
-fun GreetingPreview() {
-
-    SeleccionadorTheme {
-        Greeting("Seleccionador")
     }
 }
