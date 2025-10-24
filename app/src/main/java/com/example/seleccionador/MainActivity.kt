@@ -25,8 +25,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -56,7 +59,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-
     val listaAlumnos1 = remember { mutableStateListOf<String>() }
     val listaAlumnos2 = remember { mutableStateListOf<String>() }
 
@@ -96,6 +98,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Button(
+                modifier = Modifier.padding(10.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(R.color.primario)
                 ),
@@ -104,13 +107,21 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                         val selecionado = (0..listaAlumnos1.size - 1).random()
                         listaAlumnos2.add(listaAlumnos1[selecionado])
                         listaAlumnos1.removeAt(selecionado)
-                    }else{
-                        listaAlumnos1.addAll(listaAlumnos2)
-                        listaAlumnos2.clear()
                     }
             }){
                 Text("Seleccionar")
             }
+            Button(
+                modifier = Modifier.padding(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(R.color.primario)
+                    ),
+            onClick = {
+                listaAlumnos1.addAll(listaAlumnos2)
+                listaAlumnos2.clear()
+            }){
+            Text("Reiniciar")
+        }
         }
         Row(
             modifier = Modifier
@@ -167,9 +178,9 @@ fun ComponetesLista(alumno: String, modifier: Modifier = Modifier) {
             .background(colorResource(R.color.secundario)),
         contentAlignment = Alignment.CenterStart
     ) {
-        Text(
-            text = alumno,
-            modifier = Modifier.padding(start = 100.dp)
-        )
+            Text(
+                text = "$alumno",
+                modifier = Modifier.padding(start = 100.dp)
+            )
     }
 }
